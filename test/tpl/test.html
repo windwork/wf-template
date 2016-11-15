@@ -1,0 +1,109 @@
+<?xml version="1.0" ?>
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>{$title}</title>
+</head>
+<body>
+    <?=$title?>
+    <?=$b->a->arg?>
+    <?php echo $title; ?>
+    
+    <!-- 外部变量 -->
+    {$_GET[a]}
+    {$_POST[p]}
+    {$_COOKIE[v]}
+    {$_REQUEST[r]}
+    <!-- /外部变量 -->
+    
+    
+    <!-- 常量 -->
+	{TEST_CONST}
+    <!-- /常量 -->
+	
+    <!-- 变量 -->
+    $title : {$title}
+    $arr[a][b]: {$arr[a][b]}
+    $b->a->arg: {$b->a->arg}
+    $b->a->fnc(): {$b->a->fnc()}
+    $b->a->arr[fnc(1)]: {$b->a->arr[fnc(1)]}
+    <!-- /变量 -->
+	
+    <!-- 类静态属性、方法、类常量 -->
+    A::$sta: {A::$sta}
+    A::$sArr[1]: {A::$sArr[1]}
+    A::$sArr[fnc(1)]: {A::$sArr[fnc(1)]}
+    A::CON: {A::CON}
+    A::staFnc(): {A::staFnc()}
+    <!-- /类静态属性、方法、类常量 -->
+    
+    <!-- 函数 -->
+    {fnc('11')}
+    {fnc($title)}
+    {fnc($b->a->arg)}
+    {fnc($arr[a][b])}
+    {fnc(A::staFnc())}
+    {fnc(A::CON)}
+    {fnc($b->a->arr[fnc(1)])}
+    {fnc(\A::$sta_2)}
+    {fnc(\A::CON_1)}
+    <!-- /函数 -->
+    
+    <!-- 不解析 -->
+	{}	
+    {v:a1}
+    {5.2}
+    <!-- /不解析 -->
+	
+	{static}	
+	var a = {v:a1};
+	alert(a.v1);	
+	{/static}
+	
+    <!-- php -->
+    {#
+    class MyC {
+        public static function hello() {
+            echo 'hello!';
+        }
+    }
+    MyC::hello();
+    #}
+    <?php echo "\nhello2\n"; ?>
+    <!-- /php -->
+
+<!-- tpl -->    
+{tpl js}
+<!-- /tpl -->    
+
+
+<!-- loop -->
+{loop $arr $arrItem}
+  {loop $arrItem $k $v}
+    {loop $v $vItem}
+      {$vItem}
+    {/loop}
+    {$k}: {$v}
+  {/loop}
+{/loop}
+<!-- /loop -->
+
+<!-- for -->
+{for $i = 0; $i < count($arr); $i++}
+{$arr[$i]}
+{/for}
+<!-- /for -->
+
+{lang name}
+{lang 'name'}
+{lang "name"}
+
+{lang $phone}
+
+<!-- url -->
+{url a.b.c}
+{url var/b/c}
+<!-- /url -->
+</body>
+</html>

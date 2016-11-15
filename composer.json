@@ -1,0 +1,19 @@
+{
+  "name" : "windwork/template",
+  "description" : "windwork template engine",
+  "version" : "0.2.0",
+  "require" : {
+    "php" : ">=5.5.0"
+  },
+  "license" : "MIT",
+  "autoload" : {
+    "psr-4" : {
+      "wf\\template\\" : "lib"
+    }
+  },
+  "type" : "library",
+  "authors" : [ {
+    "name" : "Windwork Community",
+    "homepage" : "http://windwork.org"
+  } ]
+}
