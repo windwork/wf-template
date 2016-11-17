@@ -14,7 +14,7 @@ namespace wf\template;
  * 
  * @package     wf.template
  * @author      erzh <cmpan@qq.com>
- * @since       0.1.0
+ * @since       1.0.0
  */
 class Exception extends \Exception {
 	

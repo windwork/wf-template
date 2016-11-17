@@ -16,9 +16,13 @@ namespace wf\template;
  * @package     wf.template
  * @author      erzh <cmpan@qq.com>
  * @link        http://www.windwork.org/manual/wf.template.html
- * @since       0.1.0
+ * @since       1.0.0
  */
 class Engine {
+	/**
+	 * 是否启用视图分组，把手机、PC版、管理后台模板分别存放在不同的文件夹
+	 * @var bool
+	 */
 	protected $enableViewType = false;
 	
 	/**
