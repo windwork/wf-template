@@ -409,7 +409,12 @@ class Engine {
         	$replace = array();
         	foreach ($matches[0] as $k => $mat) {
         		$search[$k] = $mat;
-        		$replace[$k] = static::quote("<?php \$__loop__tmp__{$k} = @{$matches[1][$k]}; if(!empty(\$__loop__tmp__{$k}) && !is_scalar(\$__loop__tmp__{$k})): foreach(\$__loop__tmp__{$k} as {$matches[2][$k]}) : ?>");
+        		$replaceStr = "<?php 
+        		  \$__loop__tmp__{$k} = @{$matches[1][$k]}; 
+        		  if(!empty(\$__loop__tmp__{$k}) && !is_scalar(\$__loop__tmp__{$k})): 
+        		  foreach(\$__loop__tmp__{$k} as {$matches[2][$k]}) : 
+        		?>";
+        		$replace[$k] = static::quote($replaceStr);
         	}
         	$template = str_replace($search, $replace, $template);
         } 
@@ -420,7 +425,12 @@ class Engine {
         	$replace = array();
         	foreach ($matches[0] as $k => $mat) {
         		$search[$k] = $mat;
-        		$replace[$k] = static::quote("<?php \$__loop__tmp__x_{$k} = @{$matches[1][$k]}; if(!empty(\$__loop__tmp__x_{$k}) && !is_scalar(\$__loop__tmp__x_{$k})): foreach(\$__loop__tmp__x_{$k} as {$matches[2][$k]} => {$matches[3][$k]}) : ?>");
+        		$replaceStr = "<?php 
+        		  \$__loop__tmp__x_{$k} = @{$matches[1][$k]}; 
+        		  if(!empty(\$__loop__tmp__x_{$k}) && !is_scalar(\$__loop__tmp__x_{$k})): 
+        		  foreach(\$__loop__tmp__x_{$k} as {$matches[2][$k]} => {$matches[3][$k]}) : 
+        		?>";
+        		$replace[$k] = static::quote($replaceStr);
         	}
         	$template = str_replace($search, $replace, $template);
         } 
