@@ -108,7 +108,7 @@ class Engine {
      * 是否已渲染过视图
      * @var bool
      */
-    protected $isFixRenderCfg = false;
+    protected $isRenderOptFixed = false;
     
     /**
      * 未定义的属性赋值给$this->vars
@@ -262,7 +262,7 @@ class Engine {
     	}
     	$file = strtolower($file);
     	
-    	$this->fixRenderCfg($file);
+    	$this->fixRenderOpt($file);
         
         extract($this->vars,  EXTR_SKIP);
         
@@ -270,12 +270,16 @@ class Engine {
         require $this->getTpl($file);
     }
     
-    protected function fixRenderCfg($file) {
-    	if ($this->isFixRenderCfg) {
+    /**
+     * 修正模板参数设置
+     * @param string $file
+     */
+    protected function fixRenderOpt($file) {
+    	if ($this->isRenderOptFixed) {
     		return;
     	}
     	
-    	$this->isFixRenderCfg = true;
+    	$this->isRenderOptFixed = true;
     	
     	$this->tplDir      = trim($this->tplDir, '/');
     	$this->compileId   = trim($this->compileId, '/');
@@ -287,14 +291,14 @@ class Engine {
     	}
     	
     	if ($this->viewType == 'mobile' && is_file($this->tplDir . '/mobile/' . $file)) {
-    	    $this->tplDir .= '/mobile';
-    		$this->compileId .= '^mobile';
+    	    $this->tplDir     .= '/mobile';
+    		$this->compileId  .= '^mobile';
     	} else if ($this->viewType == 'admincp') {
-    		$this->tplDir .= '/admincp';
-    		$this->compileId .= '^admincp';
+    		$this->tplDir     .= '/admincp';
+    		$this->compileId  .= '^admincp';
     	} else {
-    		$this->tplDir .= '/' . $this->viewType;
-    		$this->compileId .= '^' . $this->viewType;
+    		$this->tplDir     .= '/' . $this->viewType;
+    		$this->compileId  .= '^' . $this->viewType;
     	}    	
     }
     
@@ -466,7 +470,7 @@ class Engine {
      * @param string $var
      * @return string
      */
-    public static function quote($var) {
+    protected static function quote($var) {
         return str_replace ("\\\"", "\"", preg_replace("/\\[([a-zA-Z0-9_\\-\\.\\x7f-\\xff]+)\\]/s", "['\\1']", $var));
     }
 

@@ -147,6 +147,23 @@ name: {lang('name')}
 name: <?php echo lang('name')?>
 ```
 
-只使用windwork模板引擎，不适用windwork框架
+只使用windwork模板引擎，不使用windwork MVC
 ----------------------------------------
-TODO
+
+```
+// 创建模板实例
+$view = new \wf\template\Engine();
+
+// 设置参数		
+$view
+->setCompiledDir('data/temp/tpl') // 保存编译后保存目录
+->setTplDir('template/default')   // 模板文件目录
+->setCompileId('zh_pc');          // 模板编译ID，用于区分编译后的文件名，可根据不同的模板文件类型、访问使用的语言进行区分
+
+
+$view->assign('myVar', '123456');
+
+// 使用模板 template/default/my/demo.html
+$view->render('my/demo.html');
+
+```

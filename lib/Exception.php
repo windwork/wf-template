@@ -12,7 +12,7 @@ namespace wf\template;
 /**
  * Windwork模板异常类
  * 
- * @package     wf.mvc
+ * @package     wf.template
  * @author      erzh <cmpan@qq.com>
  * @since       0.1.0
  */
