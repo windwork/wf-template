@@ -7,7 +7,7 @@ Windwork通过模板引擎将视图从业务逻辑分离，便于前端与程序
 
 我们使用模板视图作为视图层。
 
-# 选择模板
+# 模板文件夹
 所有模板放在 src/template/文件夹中，每套模板放在一个文件夹。
 默认模板文件放在 src/template/default文件夹中，可建另外的文件夹选择作为自定义模板。
 系统管理后台、前台PC版、前台手机版分开存放到不同的文件夹中。当客户的为手机时，如果手机版模板文件不存在的时候则使用PC版模板，PC版也不存在的时候则提示“模板文件不存在”的错误。
@@ -125,8 +125,7 @@ class AccountController extends \wf\mvc\Controller {
 
 ```
 
-注：
---------
+### 注：
 {lang xx}与 {lang('xx')}的区别：
 - **{lang xx}** 被模板引擎直接解析为语言变量值，lang标签后面不能是变量；
 - **{lang('xx')}** 被模板引擎解析为函数调用，lang()参数可以是变量；
@@ -147,7 +146,7 @@ name: {lang('name')}
 name: <?php echo lang('name')?>
 ```
 
-只使用windwork模板引擎，不使用windwork MVC
+3、只使用windwork模板引擎，不使用windwork MVC
 ----------------------------------------
 
 ```
@@ -160,7 +159,7 @@ $view
 ->setTplDir('template/default')   // 模板文件目录
 ->setCompileId('zh_pc');          // 模板编译ID，用于区分编译后的文件名，可根据不同的模板文件类型、访问使用的语言进行区分
 
-
+// 变量赋值
 $view->assign('myVar', '123456');
 
 // 使用模板 template/default/my/demo.html
