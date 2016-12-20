@@ -371,7 +371,8 @@ class Engine {
         
         // 语言标签 {lang key}
         $template = preg_replace_callback("/\\{lang\\s+['\\\"]?(.+?)['\\\"]?\\}/is", function($m) {
-        	return $this->lang($m[1]);
+        	$langCallback = $this->callback['lang'];
+        	return $langCallback(trim($m[1]));
         }, $template);
         
         // {if 表达式}
@@ -439,9 +440,7 @@ class Engine {
         $template = preg_replace("/\\{\\/loop\\}/", "<?php endforeach; endif; ?>", $template );
 
         // url标签
-        $template = preg_replace_callback("/\\{url\\s+['\"]?(.*?)['\"]?\\}/is", function($m) {
-        	return $this->url($m[1]);
-        }, $template);
+        $template = preg_replace("/\\{url\\s+['\"]?(.*?)['\"]?\\}/is", "<?php echo {$this->callback['url']}(\"\\1\");?>", $template);
         
         // 外部变量先进行xss过滤
         $template = preg_replace("/\\{(\\$\\_(GET|POST|REQUEST|COOKIE)\\[.*?\\])\\}/", "{htmlspecialchars(@$1)}", $template);
@@ -486,28 +485,6 @@ class Engine {
      */
     protected static function quote($var) {
         return str_replace ("\\\"", "\"", preg_replace("/\\[([a-zA-Z0-9_\\-\\.\\x7f-\\xff]+)\\]/s", "['\\1']", $var));
-    }
-
-    /**
-     * 语言包处理
-     *
-     * @param string $key 匹配到的数组
-     * @return string 语言包中该数组变量的值
-     */
-    protected function lang($key) {
-    	$langCallback = $this->callback['lang'];
-        return $langCallback(trim($key));
-    }
-
-    /**
-     * 生成链接
-     *
-     * @param string $m  链接参数
-     * @return string 语言包中该数组变量的值
-     */
-    protected function url($uri) {
-    	$urlCallback = $this->callback['url'];
-        return $urlCallback(trim($uri));
     }
 
     /**
