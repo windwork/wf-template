@@ -356,11 +356,13 @@ class Engine {
         if(false === ($template = @file_get_contents($tplFile))) {
             throw new Exception("'{$tplFile}' does not exists!");
         }
+        
 		$match = [];
         if (preg_match("/\\{ext\\s+(.*?)\\}/is", $template, $match)) {
             $masterTpl = @file_get_contents("$this->tplDir/$match[1].html");
             $masterBlob = $this->getBlob($masterTpl);
             $extBlob = $this->getBlob($template);
+            
 			// 母版内容替换
             $template = $masterTpl;
 			foreach ($masterBlob as $masterName => $masterContent) {
@@ -371,11 +373,13 @@ class Engine {
 					}
 				}
 			}
+			
 			// 除去继承标签
 			$template = preg_replace("/\\{ext(.*?)\\}/is", '', $template);
 			// 除去未重写的区块标签
 			$template =	preg_replace("/\\{blob.*?\\}(.*?)\\{\\/blob\\}/is", "\\1", $template);
 		}
+		
 		// 服务端注释 {* .... *}
         $template = preg_replace("/\\{\\*(.*?)\\*\\}/is", '', $template);
 
