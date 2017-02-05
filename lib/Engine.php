@@ -359,19 +359,17 @@ class Engine {
         
 		$match = [];
         if (preg_match("/\\{ext\\s+(.*?)\\}/is", $template, $match)) {
-            $masterTpl = @file_get_contents("$this->tplDir/$match[1].html");
+            $masterTpl = @file_get_contents("{$this->tplDir}/{$match[1]}.html");
             $masterBlob = $this->getBlob($masterTpl);
             $extBlob = $this->getBlob($template);
             
 			// 母版内容替换
             $template = $masterTpl;
-			foreach ($masterBlob as $masterName => $masterContent) {
-				foreach ($extBlob as $exName => $exContent) {
-					if ($masterName == $exName) {
-						// 块名相同, 替换块内容
-						$template =	preg_replace("/\\{blob\\s+$exName\\}(.*?)\\{\\/blob\\}/is", $exContent, $template);
-					}
-				}
+			foreach ($masterBlob as $blobName => $masterContent) {
+    			if (empty($extBlob[$blobName])) {
+    			    continue;
+    			}
+    			$template =	preg_replace("/\\{blob\\s+{$blobName}\\}(.*?)\\{\\/blob\\}/is", $extBlob[$blobName], $template);
 			}
 			
 			// 除去继承标签
