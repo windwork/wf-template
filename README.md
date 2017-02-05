@@ -52,7 +52,7 @@ class AccountController extends \wf\mvc\Controller {
   {loop $arr $var}
   ...
   {/loop}
-  # 解析后同 
+  # 解析后同
   <?php foreach($arr as $var) :?>
   ...
   <?php endforeach; ?>
@@ -60,7 +60,7 @@ class AccountController extends \wf\mvc\Controller {
   {loop $arr $k $v}
   ...
   {/loop}
-  # 解析后同 
+  # 解析后同
   <?php foreach($arr as $k => $v) :?>
   ...
   <?php endforeach; ?>
@@ -114,14 +114,30 @@ class AccountController extends \wf\mvc\Controller {
 1）{#任意PHP代码段...#}
 2）<?php php代码 ?>
 
-# static 不解析内容标签 
+# static 不解析内容标签
 {static}
 不解析的内容...
 {/static}
 
 # 模板标签注释
-<!--{模板标签}--> 
+<!--{模板标签}-->
 模板解析时将去掉模板标签两边的html注释变成 {模板标签}
+
+# 模板继承
+
+{ext 父模板文件}
+
+区块定义
+
+{blob 块名}
+    块内容
+{/blob}
+
+继承父模板后可以使用区块定义重写父模板中的区块
+
+# 服务端注释
+
+{* .... *}
 
 ```
 
@@ -136,7 +152,7 @@ class AccountController extends \wf\mvc\Controller {
 $lang = ['name' => '姓名'];
 
 // 模板中lang标签
-name: {lang name} 
+name: {lang name}
 // 解析后模板代码为：
 name: 姓名
 
