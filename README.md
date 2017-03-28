@@ -337,6 +337,7 @@ $view->render('my/demo.html');
 ```
 
 # 6、可设置参数
+\wf\template\Wind() 构造函数参数可设置参数  
 
  参数 | 示例 |说明 |
  -- | -- | -- 
@@ -349,3 +350,6 @@ $view->render('my/demo.html');
  defaultTpl | {$mod}/{$ctl}/{$act}.html | 默认模板文件，$view->render()不传参时使用的模板
  defaultSpareTpl | '' | 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件
 
+# 7、自定义模板引擎
+如果你有兴趣，也可以自定义模板引擎，在Windwork中使用。
+请implements \wf\template\EngineInterface 接口实现自定义模板。
