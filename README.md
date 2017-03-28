@@ -43,7 +43,7 @@ Windwork通过模板引擎将视图从业务逻辑分离，便于前端与程序
 ```
 
 # 2、使用模板
-在控制器中使用 $this->view()调用模板实例。
+在Windwork控制器中使用 $this->view()调用模板实例。
 
 ## 2.1 模板变量赋值：
 ```
@@ -82,54 +82,18 @@ class AccountController extends \wf\mvc\Controller {
 
 # 3、模板引擎语法
 
-## 3.1 模板标签
-### 3.1.1 foreach
-```
-  {loop $arr $var}
-  ...
-  {/loop}
-  解析后为
-  <?php foreach($arr as $var) :?>
-  ...
-  <?php endforeach; ?>
-
-  {loop $arr $k $v}
-  ...
-  {/loop}
-  解析后为
-  <?php foreach($arr as $k => $v) :?>
-  ...
-  <?php endforeach; ?>
-```
-### 3.1.2 if
-```
-  {if $a}
-
-  {elseif $b}
-
-  {else}
-
-  {/if}
-```
-### 3.1.3 for
-```
-  {for $a = 0; $a < $x; $a++}
-
-  {/for}
-```
-
-## 3.2 输出
+## 3.1 输出
 输出代码写在两对大括号中间，如{{$var}} 被解析成 <?php echo $var; ?>。
 非输出标签只有一对大括号。
-### 3.2.1 变量输出 
+### 3.1.1 变量输出 
   - 标量变量 {{$var}}
   - 数组变量 {{$arr[key]}}
   - 多维数组 {{$arr[key1][key2]}}
 
-### 3.2.2 常量输出
+### 3.1.2 常量输出
   {{CONST_XX}} // 模板中的常量约定全部为大写
 
-### 3.2.3 调用类、对象、函数并输出返回值
+### 3.1.3 调用类、对象、函数并输出返回值
  - 使用双大括号{{}}调用函数、方法并输出内容，
  - 如果不输出内容，使用{# ... #}
 
@@ -147,20 +111,20 @@ class AccountController extends \wf\mvc\Controller {
   // 用户头像地址函数（avatar函数为Windwork框架定义的函数）
   <img src="{{avatar($_SESSION['uid'], 'small')}}" />  // 第二个参数头像尺寸 size： big|medium|small|tiny
 ```
-### 3.2.3 url 链接标签
+### 3.1.4 url 链接标签
   1)使用url标签 {{url $app.$ctl.$act/param1/param2/paramk1:paramv1/...}}
   2)使用url函数 {{url("$app.$ctl.$act/param1/param2/paramk1:paramv1/...")}}
 
 
-### 3.2.4 lang 
+### 3.1.5 lang 
 
-#### 3.2.4.1 lang 语言标签：
+#### 3.1.5.1 lang 语言标签：
   {{lang nickname}}
 
-#### 3.2.4.2 lang函数：
+#### 3.1.5.2 lang函数：
   {{lang("nickname")}}
 
-#### 3.2.4.3 {{lang xx}}与 {{lang('xx')}}的区别：
+#### 3.1.5.3 {{lang xx}}与 {{lang('xx')}}的区别：
 - **{{lang xx}}** 被模板引擎直接解析为语言变量值，lang标签后面不能是变量；
 - **{{lang('xx')}}** 被模板引擎解析为函数调用，lang()参数可以是变量；
 如：
@@ -180,7 +144,45 @@ name: {{lang('name')}}
 name: <?php echo lang('name')?>
 ```
 
-### 3.2.5 执行代码段
+
+## 3.2 模板逻辑运算标签
+### 3.2.1 foreach
+```
+  {loop $arr $var}
+  ...
+  {/loop}
+  解析后为
+  <?php foreach($arr as $var) :?>
+  ...
+  <?php endforeach; ?>
+
+  {loop $arr $k $v}
+  ...
+  {/loop}
+  解析后为
+  <?php foreach($arr as $k => $v) :?>
+  ...
+  <?php endforeach; ?>
+```
+### 3.2.2 if
+```
+  {if $a}
+
+  {elseif $b}
+
+  {else}
+
+  {/if}
+```
+### 3.2.3 for
+```
+  {for $a = 0; $a < $x; $a++}
+
+  {/for}
+```
+
+4、扩展语法
+### 4.1 执行代码段
 - 1）{# ... #}
 
 ```
@@ -201,7 +203,7 @@ print 'hello';
 
 - 2）可以直接使用PHP标签 <?php code... ?>
 
-### 3.2.6 static 不解析内容标签
+### 4.2 static 不解析内容标签
 模板中有些部分我们不希望进行解析“编译”，这时我们需要使用static标签。
 ```
 {static}
@@ -209,7 +211,7 @@ print 'hello';
 {/static}
 ```
 
-### 3.2.7 模板继承
+### 4.3 模板继承
 继承语法
 {ext 父模板文件}
 
@@ -270,7 +272,7 @@ extend.html模板解析后内容为
 </html>
 ```
 
-### 3.2.8 模板注释
+### 4.4 模板注释
 #### 1） 模板标签注释
 可在模板标签两边加上HTML注释，模板解析时自动清掉HTML注释
 ```
@@ -294,7 +296,7 @@ extend.html模板解析后内容为
 
 ```
 
-# 4、单独使用Windwork模板引擎
+# 5、单独使用Windwork模板引擎
 只使用windwork模板引擎，不使用windwork MVC
 
 ```
@@ -334,7 +336,7 @@ $view->render('my/demo.html');
 
 ```
 
-# 5、可设置参数
+# 6、可设置参数
 
  参数 | 示例 |说明 |
  -- | -- | -- 
@@ -346,5 +348,4 @@ $view->render('my/demo.html');
  mergeCompile | true | 编译后的模板文件是否合并成一个文件，建议开发环境为false，正式环境为true
  defaultTpl | {$mod}/{$ctl}/{$act}.html | 默认模板文件，$view->render()不传参时使用的模板
  defaultSpareTpl | '' | 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件
-
 
