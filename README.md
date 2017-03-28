@@ -1,35 +1,70 @@
 Windwork模板引擎
 =================
+Windwork模板引擎模板引擎是一个超轻量级“编译”型模板引擎,10分钟即可完全掌握。
+
 Windwork通过模板引擎将视图从业务逻辑分离，便于前端与程序的分工协作。前端或设计师只需要简单的模板标签语法即可进行模板开发。
 视图层将模型化的数据渲染为某种表现形式。负责用它得到的信息生成应用程序需要的任何表现界面。
 
-视图层并非只限于 HTML 或文本格式的数据表现形式，它可以根据需要生成多种多样的格式， 比如视频、音乐、文档或其它任何你能想到的格式。
 
-我们使用模板视图作为视图层。
+# 1、模板文件夹
+- 所有模板放在 {ROOT_DIR}/template/文件夹中，每套模板放在一个文件夹。
+- 默认模板文件放在 {ROOT_DIR}/template/default文件夹中，可建另外的文件夹选择作为自定义模板。
+- 系统管理后台、前台PC版、前台手机版分开存放到不同的文件夹中。当客户的为手机时，如果手机版模板文件不存在的时候则使用PC版模板，PC版也不存在的时候则提示“模板文件不存在”的错误。
 
-# 模板文件夹
-所有模板放在 src/template/文件夹中，每套模板放在一个文件夹。
-默认模板文件放在 src/template/default文件夹中，可建另外的文件夹选择作为自定义模板。
-系统管理后台、前台PC版、前台手机版分开存放到不同的文件夹中。当客户的为手机时，如果手机版模板文件不存在的时候则使用PC版模板，PC版也不存在的时候则提示“模板文件不存在”的错误。
+模板示例
+```
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Page</title>
+    </head>
+    <body>
+        <ul id="nav">
+            {loop nav() $navItem}
+            <li><a href="{{$navItem[url]}}">{{$navItem[title]}}</a></li>
+            {/loop}
+        </ul>
 
+        <!-- {if $_SESSION['uid']} -->
+        <a href="logout.html">Logout</a>
+        <!-- {else} -->
+        <a href="login.html">Login</a>
+        <!-- {/if} -->
 
-1、使用模板
-------------------
+        <h1>My Webpage</h1>
+        {{MY_CONST}}
+        {{$myAariable}}
+        {{call_fnc()}}
+        {{\call\my\ComponentClass($arg1, $arg2)}}
+        {{$arr[key]}}
+        {{$arr[key2][key2]}}
+    </body>
+</html>
+```
+
+# 2、使用模板
 在控制器中使用 $this->view()调用模板实例。
 
-### 模板变量赋值：
+## 2.1 模板变量赋值：
 ```
 $this->view()->assign(‘变量’, “值”); // 变量名为字符串，值为任意数据类型。
 ```
 
-### 显示模板：
-默认模板文件存放于 src/template/default 文件夹中，
+## 2.2 显示模板：
+默认模板文件存放于 src/template/default 文件夹中，使用render方法显示模板。
 ```
-$this->view()->render($tpl = ‘模板文件’);  
-$this->view()->render(); // 默认 $tpl = "{$mod}/{$ctl}.{$act}.html"
+$this->view()->render($tpl = ‘模板文件’, $spare = "备选模板文件");  
+
+// tpl1.html 不存在的时候，使用tpl2.html,tpl2.html也不存在则报tpl1.html不存在的异常  
+$this->view()->render(‘tpl1.html’, "tpl2.html");  
+
+// 默认 $tpl = "{$app}/{$ctl}.{$act}.html"
+$this->view()->render(); 
+
 ```
 
-### 使用模板案例
+## 2.3 使用模板案例
+如下为在Windwork MVC的控制器中使用模板引擎
 ```
 class AccountController extends \wf\mvc\Controller {
     public function loginAction() {
@@ -45,14 +80,15 @@ class AccountController extends \wf\mvc\Controller {
 }
 ```
 
-2、模板引擎语法
---------------
+# 3、模板引擎语法
+
+## 3.1 模板标签
+### 3.1.1 foreach
 ```
-# foreach
   {loop $arr $var}
   ...
   {/loop}
-  # 解析后同
+  解析后为
   <?php foreach($arr as $var) :?>
   ...
   <?php endforeach; ?>
@@ -60,12 +96,13 @@ class AccountController extends \wf\mvc\Controller {
   {loop $arr $k $v}
   ...
   {/loop}
-  # 解析后同
+  解析后为
   <?php foreach($arr as $k => $v) :?>
   ...
   <?php endforeach; ?>
-
-# if
+```
+### 3.1.2 if
+```
   {if $a}
 
   {elseif $b}
@@ -73,107 +110,221 @@ class AccountController extends \wf\mvc\Controller {
   {else}
 
   {/if}
-
-# for
+```
+### 3.1.3 for
+```
   {for $a = 0; $a < $x; $a++}
 
   {/for}
-
-# 变量输出
-  {$var}
-  {$arr[key]}
-  {$arr[key1][key2]}
-
-# 常量输出
-  {CONST_XX} // 模板中的常量约定全部为大写
-
-# 调用类、对象、函数并输出返回值
-  // 调用
-  {fncName()}
-  {fncName($arg)}
-  {$obj->method()}
-  {\mymod\model\XXModel::fnc()}
-
-  // 缩略图函数：
-  <img src="{thumb($uploadPath, $width, $height)}" />  // 通过上传文件路径，指定宽高
-  <img src="{thumb($uploadPath, $width, 0)}" />  // 高自动
-  <img src="{thumb($uploadPath, 0, $height)}" />  // 宽自动
-
-  // 用户头像地址函数：
-  <img src="{avatar($uid, $type)}" />  // type： big|medium|small|tiny
-
-# url 链接标签
-  1)使用url标签 {url $mod.$ctl.$act/param1/param2/paramk1:paramv1/...}
-  2)使用url函数 {url("$mod.$ctl.$act/param1/param2/paramk1:paramv1/...")}
-
-
-# lang 语言标签：
-  {lang xxx}
-
-# 执行代码段：
-1）{#任意PHP代码段...#}
-2）<?php php代码 ?>
-
-# static 不解析内容标签
-{static}
-不解析的内容...
-{/static}
-
-# 模板标签注释
-<!--{模板标签}-->
-模板解析时将去掉模板标签两边的html注释变成 {模板标签}
-
-# 模板继承
-
-{ext 父模板文件}
-
-区块定义
-
-{blob 块名}
-    块内容
-{/blob}
-
-继承父模板后可以使用区块定义重写父模板中的区块
-
-# 服务端注释
-
-{* .... *}
-
 ```
 
-### 注：
-{lang xx}与 {lang('xx')}的区别：
-- **{lang xx}** 被模板引擎直接解析为语言变量值，lang标签后面不能是变量；
-- **{lang('xx')}** 被模板引擎解析为函数调用，lang()参数可以是变量；
+## 3.2 输出
+输出代码写在两对大括号中间，如{{$var}} 被解析成 <?php echo $var; ?>。
+非输出标签只有一对大括号。
+### 3.2.1 变量输出 
+  - 标量变量 {{$var}}
+  - 数组变量 {{$arr[key]}}
+  - 多维数组 {{$arr[key1][key2]}}
 
+### 3.2.2 常量输出
+  {{CONST_XX}} // 模板中的常量约定全部为大写
+
+### 3.2.3 调用类、对象、函数并输出返回值
+ - 使用双大括号{{}}调用函数、方法并输出内容，
+ - 如果不输出内容，使用{# ... #}
+
+```
+  {{fncName()}}
+  {{fncName($arg)}}
+  {{$obj->method()}}
+  {{\app\myapp\model\XXModel::fnc()}}
+
+  // 缩略图函数（该函数为Windwork框架定义的函数）
+  <img src="{{thumb($uploadPath, $width, $height)}}" />  // 通过上传文件路径，指定宽高
+  <img src="{{thumb($uploadPath, $width, 0)}}" />  // 高自动
+  <img src="{{thumb($uploadPath, 0, $height)}}" />  // 宽自动
+
+  // 用户头像地址函数（avatar函数为Windwork框架定义的函数）
+  <img src="{{avatar($_SESSION['uid'], 'small')}}" />  // 第二个参数头像尺寸 size： big|medium|small|tiny
+```
+### 3.2.3 url 链接标签
+  1)使用url标签 {{url $app.$ctl.$act/param1/param2/paramk1:paramv1/...}}
+  2)使用url函数 {{url("$app.$ctl.$act/param1/param2/paramk1:paramv1/...")}}
+
+
+### 3.2.4 lang 
+
+#### 3.2.4.1 lang 语言标签：
+  {{lang nickname}}
+
+#### 3.2.4.2 lang函数：
+  {{lang("nickname")}}
+
+#### 3.2.4.3 {{lang xx}}与 {{lang('xx')}}的区别：
+- **{{lang xx}}** 被模板引擎直接解析为语言变量值，lang标签后面不能是变量；
+- **{{lang('xx')}}** 被模板引擎解析为函数调用，lang()参数可以是变量；
 如：
 
 ```
+// 定义模板变量
 $lang = ['name' => '姓名'];
 
 // 模板中lang标签
-name: {lang name}
+name: {{lang name}}
 // 解析后模板代码为：
 name: 姓名
 
 // 模板中lang函数
-name: {lang('name')}
+name: {{lang('name')}}
 // 解析后模板代码为：
 name: <?php echo lang('name')?>
 ```
 
-3、只使用windwork模板引擎，不使用windwork MVC
-----------------------------------------
+### 3.2.5 执行代码段
+- 1）{# ... #}
 
 ```
-// 创建模板实例
-$view = new \wf\template\Engine();
+单行
+{# echo 123 #}
 
-// 设置参数		
-$view
-->setCompiledDir('data/temp/tpl') // 保存编译后保存目录
-->setTplDir('template/default')   // 模板文件目录
-->setCompileId('zh_pc');          // 模板编译ID，用于区分编译后的文件名，可根据不同的模板文件类型、访问使用的语言进行区分
+多行
+{#
+print 'hello';
+print 'hi';
+#}
+
+可增加HTML注释，代码高亮时便于阅读
+<!--{#
+print 'hello';
+#}-->
+```
+
+- 2）可以直接使用PHP标签 <?php code... ?>
+
+### 3.2.6 static 不解析内容标签
+模板中有些部分我们不希望进行解析“编译”，这时我们需要使用static标签。
+```
+{static}
+不解析的内容...
+{/static}
+```
+
+### 3.2.7 模板继承
+继承语法
+{ext 父模板文件}
+
+继承区块定义
+
+{block 块名}
+    块内容
+{/block}
+
+继承父模板后，可以使用区块定义重写父模板中的区块
+
+base_tpl.html
+```
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+    {block BL_1}
+    继承前的 BL_1
+    {/block}
+    
+    {block BL_2}
+    继承前的 BL_2
+    {/block}
+</body>
+</html>
+```
+
+extend.html 继承 base_tpl.html
+```
+{ext base_tpl}
+
+{block BL_1}
+继承后的 BL_1
+{/block}
+
+```
+extend.html模板解析后内容为
+```
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Document</title>
+</head>
+<body>
+    
+    继承后的 BL_1
+    
+    
+    
+    继承前的 BL_2
+    
+</body>
+</html>
+```
+
+### 3.2.8 模板注释
+#### 1） 模板标签注释
+可在模板标签两边加上HTML注释，模板解析时自动清掉HTML注释
+```
+<!--{模板标签}-->
+模板解析时将去掉模板标签两边的html注释变成 
+{模板标签}
+```
+#### 服务端注释
+使用 {* 注释内容 *} 的格式添加模板注释，模板编译后自动去掉注释内容。
+```
+{* 单行注释 *}
+
+{*
+多行注释
+...
+*}
+<!--{*
+结合HTML标签注释
+便于阅读
+*}-->
+
+```
+
+# 4、单独使用Windwork模板引擎
+只使用windwork模板引擎，不使用windwork MVC
+
+```
+// 模板可设置参数
+$tplOpt = [
+    // 模板目录，相对于入口文件所在目录
+    'tplDir'         => 'template/default',
+    
+    // 渲染模板时，是否检查模板文件是否需要编译
+    'compileCheck'   => true,
+    
+    // 设置模板识别id,用于区分不同国家的语言，不同用户使用不同模板等
+    'compileId'      => 'zh_CN',
+    
+    // 编译后的模板文件保存的文件夹
+    'compiledDir'    => 'data/template',
+    
+    // 是否强制每次都编译
+    'forceCompile'   => false,
+    
+    // 编译后的模板文件是否合并成一个文件
+    'mergeCompile'   => true,
+    
+    // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
+    'defaultTpl' => '',
+    
+    // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
+    'defaultSpareTpl' => '',
+];
+$view = new \wf\template\Wind($tplOpt);
 
 // 变量赋值
 $view->assign('myVar', '123456');
@@ -182,3 +333,18 @@ $view->assign('myVar', '123456');
 $view->render('my/demo.html');
 
 ```
+
+# 5、可设置参数
+
+ 参数 | 示例 |说明 |
+ -- | -- | -- 
+ tplDir | template/default | 模板目录，相对于入口文件所在目录 
+ compileCheck | true | 渲染模板时，是否检查模板文件是否需要编译 
+ compileId | zh_CN | 设置模板识别id,用于区分不同国家的语言，不同用户使用不同模板等
+ compiledDir | data/template | “编译”后的模板文件保存的文件夹
+ forceCompile | false | 是否强制每次都“编译”，建议开发环境为true，正式环境为false
+ mergeCompile | true | 编译后的模板文件是否合并成一个文件，建议开发环境为false，正式环境为true
+ defaultTpl | {$mod}/{$ctl}/{$act}.html | 默认模板文件，$view->render()不传参时使用的模板
+ defaultSpareTpl | '' | 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件
+
+

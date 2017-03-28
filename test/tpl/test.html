@@ -6,72 +6,80 @@
 	<title>{$title}</title>
 </head>
 <body>
-    <?=$title?>
-    <?=$b->a->arg?>
-    <?php echo $title; ?>
     
-    <!-- 外部变量 -->
-    {$_GET[a]}
-    {$_POST[p]}
-    {$_COOKIE[v]}
-    {$_REQUEST[r]}
-    <!-- /外部变量 -->
+    # 外部变量
+    - {{$_GET[a]}}
+    - {{$_GET[a][b][c]}}
+    - {{$_POST[p]}}
+    - {{$_COOKIE[v]}}
+    - {{$_REQUEST[r]}}
+    - {{$_REQUEST[$a][$b]}}
     
     
-    <!-- 常量 -->
-	{TEST_CONST}
-    <!-- /常量 -->
+    # 常量
+	- {{TEST_CONST}}
 	
-    <!-- 变量 -->
-    $title : {$title}
-    $arr[a][b]: {$arr[a][b]}
-    $b->a->arg: {$b->a->arg}
-    $b->a->fnc(): {$b->a->fnc()}
-    $b->a->arr[fnc(1)]: {$b->a->arr[fnc(1)]}
-    <!-- /变量 -->
-	
-    <!-- 类静态属性、方法、类常量 -->
-    A::$sta: {A::$sta}
-    A::$sArr[1]: {A::$sArr[1]}
-    A::$sArr[fnc(1)]: {A::$sArr[fnc(1)]}
-    A::CON: {A::CON}
-    A::staFnc(): {A::staFnc()}
-    <!-- /类静态属性、方法、类常量 -->
+    # 变量
+    - $title : {{$title}}
+    - $arr[a][b]: {{$arr[a][b]}}
+    - $b->a->arg: {{$b->a->arg}}
+    - $b->a->fnc(): {{$b->a->fnc()}}
+    - $b->a->arr[fnc(1)]: {{$b->a->arr[fnc(1)]}}
     
-    <!-- 函数 -->
-    {fnc('11')}
-    {fnc($title)}
-    {fnc($b->a->arg)}
-    {fnc($arr[a][b])}
-    {fnc(A::staFnc())}
-    {fnc(A::CON)}
-    {fnc($b->a->arr[fnc(1)])}
-    {fnc(\A::$sta_2)}
-    {fnc(\A::CON_1)}
+	
+    # 类静态属性、方法、类常量
+    - A::$sta: {{A::$sta}}
+    - A::$sArr[1]: {{A::$sArr[1]}}
+    - A::$sArr[fnc(1)]: {{A::$sArr[fnc(1)]}}
+    - A::CON: {{A::CON}}
+    - A::staFnc(): {{A::staFnc()}}
+    
+    
+    # 函数
+    - {{fnc('11')}}
+    - {{fnc($title)}}
+    - {{fnc($b->a->arg)}}
+    - {{fnc($arr[a][b])}}
+    - {{fnc(A::staFnc())}}
+    - {{fnc(\A::staFnc())}}
+    - {{fnc(A::CON)}}
+    - {{fnc($b->a->arr[fnc(1)])}}
+    - {{fnc(\A::$sta_2)}}
+    - {{fnc(\A::CON_1)}}
     <!-- /函数 -->
     
-    <!-- 不解析 -->
-	{}	
-    {v:a1}
-    {5.2}
-    <!-- /不解析 -->
+    # 不解析
+	- {}	
+	- {{}}
+    - {v:a1}
+    - {5.2}
 	
+	# static
+	1、前端使用js模板引擎时
 	{static}	
-	var a = {v:a1};
-	alert(a.v1);	
+	<div data-x="{{CST_W}}"></div>
+	<script>
+	var a = {{k:"v"}};
+	var b = {js_err}
+	{loop}
+	alert(a.k);	
+	</script>
 	{/static}
 	
-    <!-- php -->
+    # PHP脚本（不使用模板标签）
+    - <?=$title?>
+    - <?=$b->a->arg?>
+    - <?php echo $title; ?>
+    
+    # PHP脚本（使用模板标签）
     {#
-    class MyC {
-        public static function hello() {
-            echo 'hello!';
-        }
-    }
-    MyC::hello();
+    echo "dsdds";
+    A::staFnc();
     #}
+    <!-- {#echo 'hello'#} -->
+    2、
     <?php echo "\nhello2\n"; ?>
-    <!-- /php -->
+    
 
 <!-- tpl -->    
 {tpl js}
@@ -82,28 +90,39 @@
 {loop $arr $arrItem}
   {loop $arrItem $k $v}
     {loop $v $vItem}
-      {$vItem}
+      {{$vItem}}
     {/loop}
-    {$k}: {$v}
+    {{$k}}: {{$v}}
   {/loop}
 {/loop}
 <!-- /loop -->
 
 <!-- for -->
 {for $i = 0; $i < count($arr); $i++}
-{$arr[$i]}
+{{$arr[$i]}}
 {/for}
 <!-- /for -->
 
-{lang name}
-{lang 'name'}
-{lang "name"}
+# lang
+## lang 标签
+- {{lang name}}
+- {{lang 'name'}}
+- {{lang "name"}}
+- {{lang phone}}
 
-{lang $phone}
+## lang函数
+- {{lang('phone')}}
+- {{lang("phone")}}
+- {{lang("name")}}
 
-<!-- url -->
-{url a.b.c}
-{url var/b/c}
-<!-- /url -->
+# url
+## url标签
+- {{url a.b.c}}
+- {{url var/b/c}}
+
+## url函数
+- {{url 'a.b.c'}}
+- {{url "var/b/c"}}
+
 </body>
 </html>
