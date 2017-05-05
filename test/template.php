@@ -12,49 +12,57 @@ use \wf\template\Wind;
 
 define('TEST_CONST', 'test-const');
 
-class A {
-	public $arg = 112358;
-	public static $sta_2 = 2;
+class A 
+{
+    public $arg = 112358;
+    public static $sta_2 = 2;
 
-	public $arr = ['aa', 'bb', 'cc'];
-	public static $sArr = ['aa', 'bb', 'cc'];
-	
-	public function fnc() {
-		return 'run A::fnc()';
-	}
+    public $arr = ['aa', 'bb', 'cc'];
+    public static $sArr = ['aa', 'bb', 'cc'];
+    
+    public function fnc() 
+    {
+        return 'run A::fnc()';
+    }
 
-	const CON = 'A.const';
-	const CON_1 = 1;
-	
-	public static $sta = 'static.attribute';
-	
-	public static function staFnc() {
-		return 'static.function';
-	}
+    const CON = 'A.const';
+    const CON_1 = 1;
+    
+    public static $sta = 'static.attribute';
+    
+    public static function staFnc() 
+    {
+        return 'static.function';
+    }
 }
 
-function url($uri) {
-	return $uri;
+function url($uri) 
+{
+    return $uri;
 }
 
-function lang($key) {
-	$lang = [
-		'name' => '姓名',
-		'phone' => '手机号码',
-	];
-	return @$lang[$key];
+function lang($key) 
+{
+    $lang = [
+        'name' => '姓名',
+        'phone' => '手机号码',
+    ];
+    return @$lang[$key];
 }
 
-class B {
-	public $a;
+class B 
+{
+    public $a;
 
-	public function __construct(A $a) {
-		$this->a = $a;
-	}	
+    public function __construct(A $a) 
+    {
+        $this->a = $a;
+    }    
 }
 
-function fnc($obj) {
-	return $obj;
+function fnc($obj) 
+{
+    return $obj;
 }
 
 $cfg = [
@@ -68,13 +76,13 @@ $cfg = [
     'compileId'      => 'test-01-std',
     
     // 编译后的模板文件保存的文件夹
-    'compiledDir'    => __DIR__ . '/compiled',
+    'compileDir'    => __DIR__ . '/compiled',
     
     // 设置模板是否强制每次都编译
-    'forceCompile'   => true,
+    'compileForce'   => true,
     
     // 编译后的模板文件是否合并成一个文件
-    'mergeCompile'   => true,
+    'compileMerge'   => true,
     
     // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
     'defaultTpl' => 'test.html',
@@ -99,7 +107,7 @@ $template->render();
 // ====================
 // test 02
 // 编译不合并
-$cfg['mergeCompile'] = false;
+$cfg['compileMerge'] = false;
 $cfg['compileId'] = 'test-02-no-merge';
 
 $template = new Wind($cfg);

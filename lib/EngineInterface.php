@@ -4,8 +4,8 @@
  *
  * 一个开源的PHP轻量级高效Web开发框架
  *
- * @copyright   Copyright (c) 2008-2016 Windwork Team. (http://www.windwork.org)
- * @license     http://opensource.org/licenses/MIT	MIT License
+ * @copyright Copyright (c) 2008-2017 Windwork Team. (http://www.windwork.org)
+ * @license   http://opensource.org/licenses/MIT
  */
 namespace wf\template;
 
@@ -14,11 +14,12 @@ namespace wf\template;
  * 模板引擎将模板“编译”成php脚本，每次调用视图的时候将包含 “编译”后的php脚本
  *
  * @package     wf.template
- * @author      erzh <cmpan@qq.com>
+ * @author      cm <cmpan@qq.com>
  * @link        http://docs.windwork.org/manual/wf.template.html
  * @since       1.0.0
  */
-interface EngineInterface {
+interface EngineInterface 
+{
     /**
      * 未定义的属性赋值给模板变量
      *
@@ -48,15 +49,15 @@ interface EngineInterface {
      *     'compileId'      => '',
      *
      *     // 编译后的模板文件保存的文件夹
-     *     'compiledDir'    => 'data/template',
+     *     'compileDir'    => 'data/template',
      *
      *     // 设置模板是否强制每次都编译
-     *     'forceCompile'   => false,
+     *     'compileForce'   => false,
      *
      *     // 编译后的模板文件是否合并成一个文件
      *     // 如果启用，能稍微提高性能，但页面子模板修改时程序将不能检测到，修改子模板后需要通过后台清楚模板缓存
      *     // 建议工业环境启用、开发环境停用
-     *     'mergeCompile'   => true,
+     *     'compileMerge'   => true,
      *
      *     // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
      *     'defaultTpl' => '',
@@ -72,7 +73,7 @@ interface EngineInterface {
      *
      * @param string $k 模板变量下标
      * @param mixed $v 模板变量值
-     * @return \wf\template\Engine
+     * @return \wf\template\EngineInterface
      */
     public function assign($k, $v);
 

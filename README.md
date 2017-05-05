@@ -84,11 +84,13 @@ class AccountController extends \wf\mvc\Controller {
 
 ## 3.1 输出
 输出代码写在两对大括号中间，如{{$var}} 被解析成 <?php echo $var; ?>。
+{{后不能有空格，否则不会被解析。
 非输出标签只有一对大括号。
 ### 3.1.1 变量输出 
   - 标量变量 {{$var}}
   - 数组变量 {{$arr[key]}}
   - 多维数组 {{$arr[key1][key2]}}
+
 
 ### 3.1.2 常量输出
   {{CONST_XX}} // 模板中的常量约定全部为大写
@@ -312,13 +314,13 @@ $tplOpt = [
     'compileId'      => 'zh_CN',
     
     // 编译后的模板文件保存的文件夹
-    'compiledDir'    => 'data/template',
+    'compileDir'    => 'data/template',
     
     // 是否强制每次都编译
-    'forceCompile'   => false,
+    'compileForce'   => false,
     
     // 编译后的模板文件是否合并成一个文件
-    'mergeCompile'   => true,
+    'compileMerge'   => true,
     
     // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
     'defaultTpl' => '',
@@ -341,14 +343,38 @@ $view->render('my/demo.html');
 
  参数 | 示例 |说明 |
  -- | -- | -- 
- tplDir | template/default | 模板目录，相对于入口文件所在目录 
+ tplDir | app/view | 模板目录。
  compileCheck | true | 渲染模板时，是否检查模板文件是否需要编译 
  compileId | zh_CN | 设置模板识别id,用于区分不同国家的语言，不同用户使用不同模板等
- compiledDir | data/template | “编译”后的模板文件保存的文件夹
- forceCompile | false | 是否强制每次都“编译”，建议开发环境为true，正式环境为false
- mergeCompile | true | 编译后的模板文件是否合并成一个文件，建议开发环境为false，正式环境为true
+ compileDir | data/template | “编译”后的模板文件保存的文件夹
+ compileForce | false | 是否强制每次都“编译”，建议开发环境为true，正式环境为false
+ compileMerge | true | 编译后的模板文件是否合并成一个文件，建议开发环境为false，正式环境为true
  defaultTpl | {$mod}/{$ctl}/{$act}.html | 默认模板文件，$view->render()不传参时使用的模板
  defaultSpareTpl | '' | 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件
+
+注：为灵活支持模板文件的查找，模板目录选项可使用{0}、{1}、{2}等匹配规则，运行时``$view->render($file)``的$file参数中的第n个文件夹将替换掉大括号中对应的n数字的配置。
+例如：
+``` 
+// 当启用模块时，tplDir可做如下配置
+$tplDir = 'app/{0}/view'; 
+$view->render('goods.manage.add.html');
+// {0} => goods
+// 模板文件为： 'app/goods/view/manage.add.html'; 
+
+// 以下两种参数可支持但很少用
+$tplDir = 'app/{0}/view/{1}/demo'; 
+$view->render('topic/2017/newyear.html');
+// {0} => topic
+// {1} => 2017
+// 模板文件为： 'app/topic/view/2017/demo/newyear.html'; 
+
+
+$tplDir = 'app/{1}/view/{0}/demo'; 
+$view->render('topic/2017/newyear.html');
+// {0} => topic
+// {1} => 2017
+// 模板文件为： 'app/2017/view/topic/demo/newyear.html'; 
+```
 
 # 7、自定义模板引擎
 如果你有兴趣，也可以自定义模板引擎，在Windwork中使用。
