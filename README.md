@@ -328,7 +328,7 @@ $tplOpt = [
     // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
     'defaultSpareTpl' => '',
 ];
-$view = new \wf\template\Wind($tplOpt);
+$view = new \wf\template\strategy\Wind($tplOpt);
 
 // 变量赋值
 $view->assign('myVar', '123456');
@@ -339,7 +339,7 @@ $view->render('my/demo.html');
 ```
 
 # 6、可设置参数
-\wf\template\Wind() 构造函数参数可设置参数  
+\wf\template\strategy\Wind() 构造函数参数可设置参数  
 
  参数 | 示例 |说明 |
  -- | -- | -- 

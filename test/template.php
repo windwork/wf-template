@@ -4,11 +4,11 @@
 define('IS_IN', 1);
 
 require_once __DIR__ . '/../lib/EngineInterface.php';
-require_once __DIR__ . '/../lib/Wind.php';
+require_once __DIR__ . '/../lib/strategy/Wind.php';
 require_once __DIR__ . '/../lib/Exception.php';
 
 
-use \wf\template\Wind;
+use \wf\template\strategy\Wind;
 
 define('TEST_CONST', 'test-const');
 
