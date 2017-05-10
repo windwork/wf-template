@@ -88,16 +88,9 @@ class Wind implements \wf\template\EngineInterface
      * <pre>];
      */
     public function __construct(array $cfg = []) 
-    {
-        
+    {        
         // 模板参数设置
-        foreach ($this->cfg as $key => $val) {
-            if (!isset($cfg[$key])) {
-                continue;
-            }
-            
-            $this->cfg[$key] = $cfg[$key];
-        }
+        $this->cfg = array_replace_recursive($this->cfg, $cfg);
 
         $this->cfg['tplDir']     = rtrim($this->cfg['tplDir'], '/');
         $this->cfg['compileId']  = rtrim($this->cfg['compileId'], '/');

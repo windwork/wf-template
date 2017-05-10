@@ -2,8 +2,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<title>{$title}</title>
+    <meta charset="UTF-8" />
+    <title>{$title}</title>
 </head>
 <body>
     
@@ -17,8 +17,8 @@
     
     
     # 常量
-	- {{TEST_CONST}}
-	
+    - {{TEST_CONST}}
+    
     # 变量
     - $title : {{$title}}
     - $arr[a][b]: {{$arr[a][b]}}
@@ -26,7 +26,7 @@
     - $b->a->fnc(): {{$b->a->fnc()}}
     - $b->a->arr[fnc(1)]: {{$b->a->arr[fnc(1)]}}
     
-	
+    
     # 类静态属性、方法、类常量
     - A::$sta: {{A::$sta}}
     - A::$sArr[1]: {{A::$sArr[1]}}
@@ -49,24 +49,24 @@
     <!-- /函数 -->
     
     # 不解析
-	- {}	
-	- {{}}
+    - {}    
+    - {{}}
     - {{ XX}}
     - {v:a1}
     - {5.2}
-	
-	# static
-	1、前端使用js模板引擎时
-	{static}	
-	<div data-x="{{CST_W}}"></div>
-	<script>
-	var a = {{k:"v"}};
-	var b = {js_err}
-	{loop}
-	alert(a.k);	
-	</script>
-	{/static}
-	
+    
+    # static
+    1、前端使用js模板引擎时
+    {static}    
+    <div data-x="{{CST_W}}"></div>
+    <script>
+    var a = {{k:"v"}};
+    var b = {js_err}
+    {loop}
+    alert(a.k);    
+    </script>
+    {/static}
+    
     # PHP脚本（不使用模板标签）
     - <?=$title?>
     - <?=$b->a->arg?>

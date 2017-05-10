@@ -66,7 +66,7 @@ $this->view()->render();
 ## 2.3 使用模板案例
 如下为在Windwork MVC的控制器中使用模板引擎
 ```
-class AccountController extends \wf\mvc\Controller {
+class AccountController extends \wf\web\Controller {
     public function loginAction() {
         // 模板变量赋值
         $this->view()->assign('time', time());
@@ -230,8 +230,8 @@ base_tpl.html
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<title>Document</title>
+    <meta charset="UTF-8" />
+    <title>Document</title>
 </head>
 <body>
     {block BL_1}
@@ -259,8 +259,8 @@ extend.html模板解析后内容为
 <!doctype html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8" />
-	<title>Document</title>
+    <meta charset="UTF-8" />
+    <title>Document</title>
 </head>
 <body>
     
