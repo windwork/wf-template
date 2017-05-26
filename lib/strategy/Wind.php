@@ -165,57 +165,28 @@ class Wind implements \wf\template\EngineInterface
         if (empty($file)) {
             $file = $this->cfg['defaultTpl'];
         }
-        
-        if (empty($spareFile)) {
-            $spareFile = $this->cfg['defaultSpareTpl'];
-        }
 
         // 包含文件
-        require $this->getTpl($file, $spareFile);
+        require $this->getTpl($file);
     }
     
     /**
      * 获取编译后的模板文件路径
      *
      * @param string $file 模板文件名
-     * @param string $spareFile 备选模板文件名
      * @return string 编译后的模板文件路径
      */
-    protected function getTpl($file, $spareFile = '') 
-    {        
-        $compiledFile = $this->getTplCompile($file);
-        if ($compiledFile) {
-            return $compiledFile;
-        }
-        
-        // 使用备用编译模板
-        if ($spareFile && $file != $spareFile) {
-            $spareCompiledFile = $this->getTplCompile($spareFile);
-            if ($spareCompiledFile) {
-                return $spareCompiledFile;
-            }
-        }
-        
-        // 模板文件不存在
-        throw new \wf\template\Exception("'{$file}' not exists!");
-    }
-    
-    /**
-     * 对模板进行编译，然后返回编译后模板文件路径
-     * @param string $file
-     * @return string 编译后的模板文件路径
-     */
-    protected function getTplCompile($file) 
+    protected function getTpl($file) 
     {
-        $file = $this->fixFileName($file);        
-        $tplFile = $this->getTplPath($file);
-        
-        if (!is_file($tplFile)) {
-            return false;
+        $file = $this->fixFileName($file);
+        $tplFile = $this->getRealTplPath($file);
+    
+        if (!$tplFile) {
+            throw new \wf\template\Exception("template file '{$file}' not exists!");
         }
-        
+                
         $compiledName = str_replace("/", '^', $file);
-        $compiledFile = "{$this->cfg['compileDir']}/{$this->cfg['compileId']}^{$compiledName}.php";
+        $compiledFile = "{$this->cfg['compileDir']}/{$this->cfg['tplSubDir']}^{$this->cfg['compileId']}^{$compiledName}.php";
 
         // 判断是否强制编译或是否过期($compiledFile不存在时 < 成立)
         if($this->cfg['compileForce'] || !is_file($compiledFile) || ($this->cfg['compileCheck'] && @filemtime($compiledFile) < @filemtime($tplFile))) {
@@ -479,11 +450,16 @@ class Wind implements \wf\template\EngineInterface
     /**
      * 获取模板文件路径
      * @param string $file
+     * @param string $subDir = null
      * @return string
      */
-    private function getTplPath($file) 
+    private function getTplPath($file, $subDir = null) 
     {
-        $tplDir = $this->cfg['tplDir'];
+        if ($subDir === null) {
+            $subDir = $this->cfg['tplSubDir'];
+        }
+        
+        $tplDir = rtrim($this->cfg['tplDir'] . '/' . $subDir, '\\/');
         
         if (preg_match_all("/\\{(.*?)\\}/", $tplDir, $match)) {
             // 用$file参数中的字符串替换tplDir中的替换参数
@@ -498,5 +474,38 @@ class Wind implements \wf\template\EngineInterface
         $tplFile = "{$tplDir}/{$file}";
         
         return $tplFile;
+    }
+    
+    private function getRealTplPath($file) {
+        if (isset($this->cfg['tplSubDir'])) {
+            $tplFile = $this->getTplPath($file, $this->cfg['tplSubDir']);
+            
+            if (is_file($tplFile)) {
+                return $tplFile;
+            } else {
+                return false;
+            }
+        }
+        
+        // 第一次执行getTpl，初始化subDir
+        if (!empty($this->cfg['tplMajorId']) || !empty($this->cfg['tplMinorId'])) {
+            // 主模板不存在则选择备用模板
+            if (is_file($tplFile = $this->getTplPath($file, $this->cfg['tplMajorId']))) {
+                $this->cfg['tplSubDir'] = $this->cfg['tplMajorId'];
+                return $tplFile;
+            } else if (is_file($tplFile = $this->getTplPath($file, $this->cfg['tplMinorId']))) {
+                $this->cfg['tplSubDir'] = $this->cfg['tplMinorId'];
+                return $tplFile;
+            }
+        } else {
+            $this->cfg['tplSubDir'] = '';
+            $tplFile = $this->getTplPath($file);
+    
+            if (is_file($tplFile)) {
+                return $tplFile;
+            }
+        }
+        
+        return false;
     }
 }
