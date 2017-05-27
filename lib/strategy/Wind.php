@@ -18,7 +18,7 @@ namespace wf\template\strategy;
  * @link        http://docs.windwork.org/manual/wf.template.html
  * @since       1.0.0
  */
-class Wind implements \wf\template\EngineInterface 
+class Wind implements \wf\template\EngineInterface
 {
     /**
      * 存贮模板中设置及调用的变量
@@ -26,7 +26,7 @@ class Wind implements \wf\template\EngineInterface
      * @var array
      */
     protected $vars = array();
-    
+
     /**
      * 模板配置
      * @var array
@@ -34,61 +34,61 @@ class Wind implements \wf\template\EngineInterface
     protected $cfg = [
         // 模板目录，位于站点根目录
         'tplDir'         => 'template/default',
-        
+
         // 渲染模板时，是否检查模板文件是否需要编译
         'compileCheck'   => true,
-        
+
         // 设置模板识别id,用于区分不同国家的语言
         'compileId'      => '',
-        
+
         // 编译后的模板文件保存的文件夹
         'compileDir'    => 'data/template',
-        
+
         // 设置模板是否强制每次都编译
         'compileForce'   => false,
-        
+
         // 编译后的模板文件是否合并成一个文件
         'compileMerge'   => true,
-        
+
         // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
         'defaultTpl' => '',
-        
+
         // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
         'defaultSpareTpl' => '',
     ];
-    
+
     /**
-     * 
+     *
      * @param array $cfg = [<pre>
      *     // 模板目录，相对于入口文件所在目录
      *     'tplDir'         => 'template/default',
-     *     
+     *
      *     // 渲染模板时，是否检查模板文件是否需要编译
      *     'compileCheck'   => true,
-     *     
+     *
      *     // 设置模板识别id,用于区分不同国家的语言
      *     'compileId'      => '',
-     *     
+     *
      *     // 编译后的模板文件保存的文件夹
      *     'compileDir'    => 'data/template',
-     *     
+     *
      *     // 设置模板是否强制每次都编译
      *     'compileForce'   => false,
-     *     
+     *
      *     // 编译后的模板文件是否合并成一个文件
      *     // 如果启用，能稍微提高性能，但页面子模板修改时程序将不能检测到，修改子模板后需要通过后台清楚模板缓存
      *     // 建议工业环境启用、开发环境停用
      *     'compileMerge'   => true,
-     *     
+     *
      *     // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
      *     'defaultTpl' => '',
-     *     
+     *
      *     // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
      *     'defaultSpareTpl' => '',
      * <pre>];
      */
-    public function __construct(array $cfg = []) 
-    {        
+    public function __construct(array $cfg = [])
+    {
         // 模板参数设置
         $this->cfg = array_replace_recursive($this->cfg, $cfg);
 
@@ -103,7 +103,7 @@ class Wind implements \wf\template\EngineInterface
      * @param string $var
      * @param mixed $val
      */
-    public function __set($var, $val) 
+    public function __set($var, $val)
     {
         $this->vars[$var] = $val;
     }
@@ -114,7 +114,7 @@ class Wind implements \wf\template\EngineInterface
      * @param string $var 属性名
      * @return mixed
      */
-    public function __get($var) 
+    public function __get($var)
     {
         return isset($this->vars[$var])? $this->vars[$var] : null;
     }
@@ -126,7 +126,7 @@ class Wind implements \wf\template\EngineInterface
      * @param mixed $v 模板变量值
      * @return \wf\template\Engine
      */
-    public function assign($k, $v) 
+    public function assign($k, $v)
     {
         $this->vars[$k] = $v;
         return $this;
@@ -138,7 +138,7 @@ class Wind implements \wf\template\EngineInterface
      * @param string $index
      * @return mixed
      */
-    public function getVar($index) 
+    public function getVar($index)
     {
         return isset($this->vars[$index]) ? $this->vars[$index] : null;
     }
@@ -148,20 +148,20 @@ class Wind implements \wf\template\EngineInterface
      *
      * @return array
      */
-    public function getVars() 
+    public function getVars()
     {
         return $this->vars;
     }
 
     /**
-     * 
+     *
      * @param string $file
      * @param string $spareFile
      */
-    public function render($file = '', $spareFile = '') 
+    public function render($file = '', $spareFile = '')
     {
         extract($this->vars,  EXTR_SKIP);
-        
+
         if (empty($file)) {
             $file = $this->cfg['defaultTpl'];
         }
@@ -169,22 +169,22 @@ class Wind implements \wf\template\EngineInterface
         // 包含文件
         require $this->getTpl($file);
     }
-    
+
     /**
      * 获取编译后的模板文件路径
      *
      * @param string $file 模板文件名
      * @return string 编译后的模板文件路径
      */
-    protected function getTpl($file) 
+    protected function getTpl($file)
     {
         $file = $this->fixFileName($file);
         $tplFile = $this->getRealTplPath($file);
-    
+
         if (!$tplFile) {
             throw new \wf\template\Exception("template file '{$file}' not exists!");
         }
-                
+
         $compiledName = str_replace("/", '^', $file);
         $compiledFile = "{$this->cfg['compileDir']}/{$this->cfg['tplSubDir']}^{$this->cfg['compileId']}^{$compiledName}.php";
 
@@ -201,7 +201,7 @@ class Wind implements \wf\template\EngineInterface
      * @param $text
      * @return array
      */
-    protected function getBlock($text) 
+    protected function getBlock($text)
     {
         $matches = [];
         $rtv = [];
@@ -223,36 +223,41 @@ class Wind implements \wf\template\EngineInterface
      * @return bool
      * @throws \wf\template\Exception 如果模板文件不存在则抛出异常
      */
-    protected function compile($tplFile, $compiledFile) 
+    protected function compile($tplFile, $compiledFile)
     {
         if(false === ($template = @file_get_contents($tplFile))) {
             throw new \wf\template\Exception("'{$tplFile}' does not exists!");
         }
-        
+
         $match = [];
         // {ext ...}
         if (preg_match("/\\{ext\\s+(.*?)\\}/is", $template, $match)) {
             $masterTpl = @file_get_contents("{$this->cfg['tplDir']}/{$match[1]}.html");
             $masterBlock = $this->getBlock($masterTpl);
             $extBlock = $this->getBlock($template);
-            
+
             // 母版内容替换
             $template = $masterTpl;
             foreach ($masterBlock as $blockName => $masterContent) {
                 if (empty($extBlock[$blockName])) {
                     continue;
                 }
+                $extContent = $extBlock[$blockName];
+                // 重写的区块可以用 {parent} 调出父模板的内容
+                if (strpos($extContent, '{parent}') !== false) { // 有 {parent}
+                  $extBlock[$blockName] = str_replace('{parent}', $masterBlock[$blockName], $extContent);
+                }
                 // 提取 {block ... } ... {/block}
                 $template =    preg_replace("/\\{block\\s+{$blockName}\\}(.*?)\\{\\/block\}/is", $extBlock[$blockName], $template);
             }
-            
+
             // 清除继承标签 {ext ...}
             $template = preg_replace("/\\{ext(.*?)\\}/is", '', $template);
-            
+
             // 清除未重写的区块标签名
             $template =    preg_replace("/\\{block.*?\\}(.*?)\\{\\/block\\}/is", "\\1", $template);
         }
-        
+
         // 服务端注释 {* .... *}，清空
         $template = preg_replace("/\\{\\*(.*?)\\*\\}/is", '', $template);
 
@@ -262,7 +267,7 @@ class Wind implements \wf\template\EngineInterface
         // {tpl xx} 包含另一个模板
         $template = preg_replace_callback("/\\{tpl\\s+['\\\"]?(.*?)['\\\"]?\\}/is", array($this, 'subTpl'), $template);
 
-        
+
         // START 处理不解析部分  ======================
 
         // 允许模板中使用 <?xml ... ？>标签，解决xml声明标签被当做php标识符
@@ -285,12 +290,12 @@ class Wind implements \wf\template\EngineInterface
         }, $template);
 
         // END 处理不解析部分  ======================
-        
-        // url 
-        $template = preg_replace("/\\{\\{url\\s+['\"]?(.*?)['\"]?\\}\\}/is", "<?php echo url(\"\\1\");?>", $template);
-        
+
+        // url
+        $template = preg_replace("/\\{\\{\\s{0,}url\\s+['\"]?(.*?)['\"]?\\s{0,}\\}\\}/is", "<?php echo url(\"\\1\");?>", $template);
+
         // lang 语言标签 {{lang key}}
-        $template = preg_replace_callback("/\\{\\{lang\\s+['\\\"]?(.+?)['\\\"]?\\}\\}/is", function($m) {
+        $template = preg_replace_callback("/\\{\\{\\s{0,}lang\\s+['\\\"]?(.+?)['\\\"]?\\s{0,}\\}\\}/is", function($m) {
             return lang(trim($m[1]));
         }, $template);
 
@@ -354,14 +359,14 @@ class Wind implements \wf\template\EngineInterface
         $template = preg_replace("/\\{\\/loop\\}/", "<?php endforeach; endif; ?>", $template );
 
         // 外部变量先进行xss过滤
-        $template = preg_replace("/\\{\\{(\\$\\_(GET|POST|REQUEST|COOKIE)\\[.*?\\])\\}\\}/", "{{htmlspecialchars(@$1)}}", $template);
+        $template = preg_replace("/\\{\\{\\s{0,}(\\$\\_(GET|POST|REQUEST|COOKIE)\\[.*?\\])\\s{0,}\\}\\}/", "{{htmlspecialchars(@$1)}}", $template);
 
         // echo 常量 {{CONST}}
-        $template = preg_replace("/\\{\\{([A-Z_][A-Z0-9_]+)\\}\\}/", "<?php defined('\\1') && print \\1;?>", $template );
+        $template = preg_replace("/\\{\\{\\s{0,}([A-Z_][A-Z0-9_]+)\\s{0,}\\}\\}/", "<?php defined('\\1') && print \\1;?>", $template );
 
         // echo 变量/数组/函数/对象属性、方法/类静态属性、方法/类常量
         /* {{xxxx}} => <?php echo xxxx ?> */
-        $template = preg_replace_callback("/\\{\\{([@a-z_\\$\\\\].+?)\\}\\}/i", function($m){
+        $template = preg_replace_callback("/\\{\\{\\s{0,}([@a-z_\\$\\\\].+?)\\s{0,}\\}\\}/i", function($m){
             return static::quote("<?php echo @{$m[1]};?>");
         }, $template);
 
@@ -396,7 +401,7 @@ class Wind implements \wf\template\EngineInterface
      * @param string $var
      * @return string
      */
-    protected static function quote($var) 
+    protected static function quote($var)
     {
         return str_replace ("\\\"", "\"", preg_replace("/\\[([a-zA-Z0-9_\\-\\.\\x7f-\\xff]+)\\]/s", "['\\1']", $var));
     }
@@ -407,15 +412,15 @@ class Wind implements \wf\template\EngineInterface
      * @param array $m
      * @return string
      */
-    protected function subTpl($m) 
+    protected function subTpl($m)
     {
         $subTpl = $m[1]; // 匹配的子模板
         if ($this->cfg['compileMerge']) {
             // 合并子模板到主模板
-            
+
             $tplPath = $this->getTplPath($subTpl . '.html');
             $content = file_get_contents($tplPath);
-            
+
             // 去掉<!--{}-->的<!-- -->
             $content = preg_replace("/\\<\\!\\-\\-\\s*?\\{(.+?)\\}\\s*?\\-\\-\\>/s", "{\\1}", $content);
 
@@ -427,40 +432,40 @@ class Wind implements \wf\template\EngineInterface
                     return file_get_contents($tplPath);
                 }, $content); // {tpl xx}
             }
-            
+
             // 去掉<!--{}-->的<!-- --> HTML注释
             $content = preg_replace("/\\<\\!\\-\\-\\s*?\\{(.+?)\\}\\s*?\\-\\-\\>/s", "{\\1}", $content);
-            
+
             return $content;
         } else {
             return "<?php require \$this->getTpl('{$subTpl}.html');?>";
         }
     }
-    
+
     /**
      * 文件名整理
      * @param string $file
      * @return string
      */
-    private function fixFileName($file) 
+    private function fixFileName($file)
     {
         return trim(strtolower($file), '/ ');
     }
-    
+
     /**
      * 获取模板文件路径
      * @param string $file
      * @param string $subDir = null
      * @return string
      */
-    private function getTplPath($file, $subDir = null) 
+    private function getTplPath($file, $subDir = null)
     {
         if ($subDir === null) {
             $subDir = $this->cfg['tplSubDir'];
         }
-        
+
         $tplDir = rtrim($this->cfg['tplDir'] . '/' . $subDir, '\\/');
-        
+
         if (preg_match_all("/\\{(.*?)\\}/", $tplDir, $match)) {
             // 用$file参数中的字符串替换tplDir中的替换参数
             $fileArr = explode('/', $file);
@@ -470,23 +475,23 @@ class Wind implements \wf\template\EngineInterface
             }
             $file = implode('/', $fileArr);
         }
-        
+
         $tplFile = "{$tplDir}/{$file}";
-        
+
         return $tplFile;
     }
-    
+
     private function getRealTplPath($file) {
         if (isset($this->cfg['tplSubDir'])) {
             $tplFile = $this->getTplPath($file, $this->cfg['tplSubDir']);
-            
+
             if (is_file($tplFile)) {
                 return $tplFile;
             } else {
                 return false;
             }
         }
-        
+
         // 第一次执行getTpl，初始化subDir
         if (!empty($this->cfg['tplMajorId']) || !empty($this->cfg['tplMinorId'])) {
             // 主模板不存在则选择备用模板
@@ -500,12 +505,12 @@ class Wind implements \wf\template\EngineInterface
         } else {
             $this->cfg['tplSubDir'] = '';
             $tplFile = $this->getTplPath($file);
-    
+
             if (is_file($tplFile)) {
                 return $tplFile;
             }
         }
-        
+
         return false;
     }
 }
