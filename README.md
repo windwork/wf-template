@@ -214,19 +214,26 @@ print 'hello';
 ```
 
 ### 4.3 模板继承
-继承语法
+模板继承可以在父模板中定义继承后的模板中可重新定义的区域。
+
+#### 4.3.1 使用模板继承
+第一步，使用ext标签定义继承的模板文件，如下
+```
 {ext 父模板文件}
+```
 
-继承区块定义
-
+第二步，使用block标签在父模板文件定义可修改的区块，然后在继承的模板中使用同样的区块名修改区块内容。
+```
 {block 块名}
     块内容
 {/block}
-
-继承父模板后，可以使用区块定义重写父模板中的区块
-
-base_tpl.html
 ```
+
+案例：使用区块定义重写父模板中的区块
+
+父模板
+```
+<!-- base_tpl.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -245,8 +252,9 @@ base_tpl.html
 </html>
 ```
 
-extend.html 继承 base_tpl.html
+子模板extend.html 继承 base_tpl.html
 ```
+<!-- extend.html -->
 {ext base_tpl}
 
 {block BL_1}
@@ -256,6 +264,7 @@ extend.html 继承 base_tpl.html
 ```
 extend.html模板解析后内容为
 ```
+<!-- extend.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -272,6 +281,22 @@ extend.html模板解析后内容为
     
 </body>
 </html>
+```
+
+#### 4.3.2 保留父模板区块内容的语法
+在继承模板的区块中嵌入{parent}标签，该标签将被替换成父区块中的代码。
+```
+{block BL_1}
+{parent}
+继承后的 BL_1
+{parent}
+{/block}
+```
+将解析为
+```
+继承前的 BL_1
+继承后的 BL_1
+继承前的 BL_1
 ```
 
 ### 4.4 模板注释

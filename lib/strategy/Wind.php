@@ -258,7 +258,7 @@ class Wind implements \wf\template\EngineInterface
             $template =    preg_replace("/\\{block.*?\\}(.*?)\\{\\/block\\}/is", "\\1", $template);
         }
 
-        // 服务端注释 {* .... *}，清空
+        // 服务器端注释 {* .... *}，清空
         $template = preg_replace("/\\{\\*(.*?)\\*\\}/is", '', $template);
 
         // 去掉模板标签HTML注释，去掉<!--{}-->的<!-- --> HTML注释
