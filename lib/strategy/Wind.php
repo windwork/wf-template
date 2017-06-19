@@ -25,7 +25,7 @@ class Wind implements \wf\template\EngineInterface
      *
      * @var array
      */
-    protected $vars = array();
+    protected $vars = [];
 
     /**
      * 模板配置
@@ -33,7 +33,7 @@ class Wind implements \wf\template\EngineInterface
      */
     protected $cfg = [
         // 模板目录，位于站点根目录
-        'tplDir'         => 'template/default',
+        'tplDir'         => 'template',
 
         // 渲染模板时，是否检查模板文件是否需要编译
         'compileCheck'   => true,
@@ -61,7 +61,7 @@ class Wind implements \wf\template\EngineInterface
      *
      * @param array $cfg = [<pre>
      *     // 模板目录，相对于入口文件所在目录
-     *     'tplDir'         => 'template/default',
+     *     'tplDir'         => 'template',
      *
      *     // 渲染模板时，是否检查模板文件是否需要编译
      *     'compileCheck'   => true,
@@ -265,7 +265,7 @@ class Wind implements \wf\template\EngineInterface
         $template = preg_replace("/\\<\\!\\-\\-\\s*?\\{(.+?)\\}\\s*?\\-\\-\\>/s", "{\\1}", $template);
 
         // {tpl xx} 包含另一个模板
-        $template = preg_replace_callback("/\\{tpl\\s+['\\\"]?(.*?)['\\\"]?\\}/is", array($this, 'subTpl'), $template);
+        $template = preg_replace_callback("/\\{tpl\\s+['\\\"]?(.*?)['\\\"]?\\}/is", [$this, 'subTpl'], $template);
 
 
         // START 处理不解析部分  ======================
@@ -325,8 +325,8 @@ class Wind implements \wf\template\EngineInterface
 
         // {loop $arr $v} => foreach($arr as $v)
         if(preg_match_all("/\\{loop\\s+?(\\S+?)\\s+?(\\S+?)\\}/s", $template, $matches)) {
-            $search = array();
-            $replace = array();
+            $search = [];
+            $replace = [];
             foreach ($matches[0] as $k => $mat) {
                 $search[$k] = $mat;
                 $replaceStr = "<?php
@@ -341,8 +341,8 @@ class Wind implements \wf\template\EngineInterface
 
         // {loop $arr $k $v} => foreach($arr as $k => $v)
         if(preg_match_all("/\\{loop\\s+?(\\S+?)\\s+?(\\S+)?\\s+?(\\S+?)\\}/s", $template, $matches)) {
-            $search = array();
-            $replace = array();
+            $search = [];
+            $replace = [];
             foreach ($matches[0] as $k => $mat) {
                 $search[$k] = $mat;
                 $replaceStr = "<?php

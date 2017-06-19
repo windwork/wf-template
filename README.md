@@ -5,12 +5,6 @@ Windwork模板引擎模板引擎是一个超轻量级“编译”型模板引擎
 Windwork通过模板引擎将视图从业务逻辑分离，便于前端与程序的分工协作。前端或设计师只需要简单的模板标签语法即可进行模板开发。
 视图层将模型化的数据渲染为某种表现形式。负责用它得到的信息生成应用程序需要的任何表现界面。
 
-
-# 1、模板文件夹
-- 所有模板放在 {ROOT_DIR}/template/文件夹中，每套模板放在一个文件夹。
-- 默认模板文件放在 {ROOT_DIR}/template/default文件夹中，可建另外的文件夹选择作为自定义模板。
-- 系统管理后台、前台PC版、前台手机版分开存放到不同的文件夹中。当客户的为手机时，如果手机版模板文件不存在的时候则使用PC版模板，PC版也不存在的时候则提示“模板文件不存在”的错误。
-
 模板示例
 ```
 <!DOCTYPE html>
@@ -20,27 +14,47 @@ Windwork通过模板引擎将视图从业务逻辑分离，便于前端与程序
     </head>
     <body>
         <ul id="nav">
+            <!-- 循环 -->
             {loop nav() $navItem}
             <li><a href="{{$navItem[url]}}">{{$navItem[title]}}</a></li>
             {/loop}
+            <!-- END 循环 -->
         </ul>
-
+        <!-- 条件 -->
         <!-- {if $_SESSION['uid']} -->
         <a href="logout.html">Logout</a>
         <!-- {else} -->
         <a href="login.html">Login</a>
         <!-- {/if} -->
+        <!-- END 条件 -->
 
-        <h1>My Webpage</h1>
-        {{MY_CONST}}
-        {{$myAariable}}
+        <h1>My Webpage</h1>        
+        <!-- 输出常量 -->
+        {{MY_CONST}}   
+
+        <!-- 输出变量 -->
+        {{$myAariable}}  
+   
+        <!-- 输出函数 -->
         {{call_fnc()}}
-        {{\call\my\ComponentClass($arg1, $arg2)}}
+   
+        <!-- 输出静态方法调用 -->
+        {{\call\my\ComponentClass::fnc($arg1, $arg2)}}
+   
+        <!-- 输出数组变量 -->
         {{$arr[key]}}
         {{$arr[key2][key2]}}
     </body>
 </html>
 ```
+
+# 1、模板文件夹
+- 默认模板文件放在 ./template/，可自定义模板文件夹。
+- 建议系统管理后台、前台PC版、前台手机版可以分开存放到不同的文件夹中。
+- 模板引擎提供自定义模板文件夹的配置，详见模板引擎**配置参数**部分
+
+## Windwork模板引擎
+
 
 # 2、使用模板
 在Windwork控制器中使用 $this->view()调用模板实例。
@@ -51,19 +65,19 @@ $this->view()->assign(‘变量’, “值”); // 变量名为字符串，值�
 ```
 
 ## 2.2 显示模板：
-默认模板文件存放于 src/template/default 文件夹中，使用render方法显示模板。
+默认模板文件存放于模块文件夹下的view文件夹中，使用render方法显示模板。
 ```
 $this->view()->render($tpl = ‘模板文件’, $spare = "备选模板文件");  
 
 // tpl1.html 不存在的时候，使用tpl2.html,tpl2.html也不存在则报tpl1.html不存在的异常  
 $this->view()->render(‘tpl1.html’, "tpl2.html");  
 
-// 默认 $tpl = "{$app}/{$ctl}.{$act}.html"
+// 默认 $tpl = "{$mod}/{$ctl}.{$act}.html"
 $this->view()->render(); 
 
 ```
 
-## 2.3 使用模板案例
+## 2.3 在控制器中使用模板
 如下为在Windwork MVC的控制器中使用模板引擎
 ```
 class AccountController extends \wf\web\Controller {
@@ -71,10 +85,10 @@ class AccountController extends \wf\web\Controller {
         // 模板变量赋值
         $this->view()->assign('time', time());
 
-        // 显示模板 src/template/default/user/account.login.html
+        // 显示模板 app/user/view/account.login.html
         $this->view()->render();
 
-        // 显示模板 src/template/default/user/account.login.m.html
+        // 显示模板 app/user/view/account.login.m.html
         $this->view()->render('user/account.login.m.html');
     }
 }
@@ -114,8 +128,8 @@ class AccountController extends \wf\web\Controller {
   <img src="{{avatar($_SESSION['uid'], 'small')}}" />  // 第二个参数头像尺寸 size： big|medium|small|tiny
 ```
 ### 3.1.4 url 链接标签
-  1)使用url标签 {{url $app.$ctl.$act/param1/param2/paramk1:paramv1/...}}
-  2)使用url函数 {{url("$app.$ctl.$act/param1/param2/paramk1:paramv1/...")}}
+  1)使用url标签 {{url $mod.$ctl.$act/param1/param2/paramk1:paramv1/...}}
+  2)使用url函数 {{url("$mod.$ctl.$act/param1/param2/paramk1:paramv1/...")}}
 
 
 ### 3.1.5 lang 
@@ -324,7 +338,7 @@ extend.html模板解析后内容为
 ```
 
 # 5、单独使用Windwork模板引擎
-只使用windwork模板引擎，不使用windwork MVC
+Windwork控制器中已经初始化好模板引擎，你只需要在配置文件中设置模板参数即可。而当你只使用windwork模板引擎，不使用完整的windwork MVC时，创建模板对象案例如下：
 
 ```
 // 模板可设置参数
@@ -347,10 +361,10 @@ $tplOpt = [
     // 编译后的模板文件是否合并成一个文件
     'compileMerge'   => true,
     
-    // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
+    // 默认模板文件，建议是"{$mod}/{$ctl}.{$act}.html"
     'defaultTpl' => '',
     
-    // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
+    // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}.{$act}.html"
     'defaultSpareTpl' => '',
 ];
 $view = new \wf\template\strategy\Wind($tplOpt);
@@ -363,8 +377,8 @@ $view->render('my/demo.html');
 
 ```
 
-# 6、可设置参数
-\wf\template\strategy\Wind() 构造函数参数可设置参数  
+# 6、配置参数
+通过模板引擎构造函数设置模板配置参数，可配置参数如下：  
 
  参数 | 示例 |说明 |
  -- | -- | -- 
