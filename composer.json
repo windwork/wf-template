@@ -1,19 +1,20 @@
 {
-  "name" : "windwork/template",
-  "description" : "windwork template engine",
-  "version" : "0.5.0",
-  "require" : {
-    "php" : ">=5.5.0"
-  },
-  "license" : "MIT",
-  "autoload" : {
-    "psr-4" : {
-      "wf\\template\\" : "lib"
-    }
-  },
-  "type" : "library",
-  "authors" : [ {
-    "name" : "Windwork Community",
-    "homepage" : "http://windwork.org"
-  } ]
+	"name" : "windwork/template",
+	"description" : "windwork template engine",
+	"version" : "0.5.1",
+	"require" : {
+		"php" : ">=5.5.0"
+	},
+	"license" : "MIT",
+	"autoload" : {
+		"psr-4" : {
+			"wf\\template\\" : "lib"
+		}
+	},
+	"type" : "library",
+	"authors" : [{
+			"name" : "Windwork Community",
+			"homepage" : "http://windwork.org"
+		}
+	]
 }
