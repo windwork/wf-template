@@ -58,7 +58,7 @@ class Wind implements \wf\template\EngineInterface
     ];
 
     /**
-     *
+     * 
      * @param array $cfg = [<pre>
      *     // 模板目录，相对于入口文件所在目录
      *     'tplDir'         => 'template',
@@ -248,14 +248,14 @@ class Wind implements \wf\template\EngineInterface
                   $extBlock[$blockName] = str_replace('{parent}', $masterBlock[$blockName], $extContent);
                 }
                 // 提取 {block ... } ... {/block}
-                $template =    preg_replace("/\\{block\\s+{$blockName}\\}(.*?)\\{\\/block\}/is", $extBlock[$blockName], $template);
+                $template = preg_replace("/\\{block\\s+{$blockName}\\}(.*?)\\{\\/block\}/is", $extBlock[$blockName], $template);
             }
 
             // 清除继承标签 {ext ...}
             $template = preg_replace("/\\{ext(.*?)\\}/is", '', $template);
 
             // 清除未重写的区块标签名
-            $template =    preg_replace("/\\{block.*?\\}(.*?)\\{\\/block\\}/is", "\\1", $template);
+            $template = preg_replace("/\\{block.*?\\}(.*?)\\{\\/block\\}/is", "\\1", $template);
         }
 
         // 服务器端注释 {* .... *}，清空
@@ -292,10 +292,10 @@ class Wind implements \wf\template\EngineInterface
         // END 处理不解析部分  ======================
 
         // url
-        $template = preg_replace("/\\{\\{\\s{0,}url\\s+['\"]?(.*?)['\"]?\\s{0,}\\}\\}/is", "<?php echo url(\"\\1\");?>", $template);
+        $template = preg_replace("/\\{\\{\\s*url\\s+['\"]?(.*?)['\"]?\\s*\\}\\}/is", "<?php echo url(\"\\1\");?>", $template);
 
         // lang 语言标签 {{lang key}}
-        $template = preg_replace_callback("/\\{\\{\\s{0,}lang\\s+['\\\"]?(.+?)['\\\"]?\\s{0,}\\}\\}/is", function($m) {
+        $template = preg_replace_callback("/\\{\\{\\s*lang\\s+['\\\"]?(.+?)['\\\"]?\\s*\\}\\}/is", function($m) {
             return lang(trim($m[1]));
         }, $template);
 
@@ -359,14 +359,14 @@ class Wind implements \wf\template\EngineInterface
         $template = preg_replace("/\\{\\/loop\\}/", "<?php endforeach; endif; ?>", $template );
 
         // 外部变量先进行xss过滤
-        $template = preg_replace("/\\{\\{\\s{0,}(\\$\\_(GET|POST|REQUEST|COOKIE)\\[.*?\\])\\s{0,}\\}\\}/", "{{htmlspecialchars(@$1)}}", $template);
+        $template = preg_replace("/\\{\\{\\s*,}(\\$\\_(GET|POST|REQUEST|COOKIE)\\[.*?\\])\\s*\\}\\}/", "{{htmlspecialchars(@$1)}}", $template);
 
         // echo 常量 {{CONST}}
-        $template = preg_replace("/\\{\\{\\s{0,}([A-Z_][A-Z0-9_]+)\\s{0,}\\}\\}/", "<?php defined('\\1') && print \\1;?>", $template );
+        $template = preg_replace("/\\{\\{\\s*([A-Z_][A-Z0-9_]+)\\s*\\}\\}/", "<?php defined('\\1') && print \\1;?>", $template );
 
         // echo 变量/数组/函数/对象属性、方法/类静态属性、方法/类常量
         /* {{xxxx}} => <?php echo xxxx ?> */
-        $template = preg_replace_callback("/\\{\\{\\s{0,}([@a-z_\\$\\\\].+?)\\s{0,}\\}\\}/i", function($m){
+        $template = preg_replace_callback("/\\{\\{\\s*([@a-z_\\$\\\\].+?)\\s*\\}\\}/i", function($m){
             return static::quote("<?php echo @{$m[1]};?>");
         }, $template);
 
@@ -387,7 +387,6 @@ class Wind implements \wf\template\EngineInterface
                     . " */\n"
                     . "defined('IS_IN') || die('Access Denied');\n"
                     . "?>";
-
 
         // 保存“编译”后模板文件
         @file_put_contents($compiledFile, $thisTplMsg . $template);
@@ -427,10 +426,11 @@ class Wind implements \wf\template\EngineInterface
             $tplDir = $this->cfg['tplDir'];
             // 多级嵌套包含，尽管支持多级包含，但应该少用多级包含
             for ($i = 0; $i < 6; $i++) {
+                // {tpl xx}
                 $content = preg_replace_callback("/\\{tpl\\s+['\"]?(.*?)['\"]?\\}/", function($m) use ($tplDir){
                     $tplPath = $this->getTplPath($m[1] . '.html');
                     return file_get_contents($tplPath);
-                }, $content); // {tpl xx}
+                }, $content);
             }
 
             // 去掉<!--{}-->的<!-- --> HTML注释

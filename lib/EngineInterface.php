@@ -11,8 +11,38 @@ namespace wf\template;
 
 /**
  * 模板视图引擎
+ * 
  * 模板引擎将模板“编译”成php脚本，每次调用视图的时候将包含 “编译”后的php脚本
+ * 
+ * 配置参数
+ * <pre>[
+ *     // 模板目录，相对于入口文件所在目录
+ *     'tplDir'         => 'template/default',
  *
+ *     // 渲染模板时，是否检查模板文件是否需要编译
+ *     'compileCheck'   => true,
+ *
+ *     // 设置模板识别id,用于区分不同国家的语言
+ *     'compileId'      => '',
+ *
+ *     // 编译后的模板文件保存的文件夹
+ *     'compileDir'    => 'data/template',
+ *
+ *     // 设置模板是否强制每次都编译
+ *     'compileForce'   => false,
+ *
+ *     // 编译后的模板文件是否合并成一个文件
+ *     // 如果启用，能稍微提高性能，但页面子模板修改时程序将不能检测到，修改子模板后需要通过后台清楚模板缓存
+ *     // 建议工业环境启用、开发环境停用
+ *     'compileMerge'   => true,
+ *
+ *     // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
+ *     'defaultTpl' => '',
+ *
+ *     // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
+ *     'defaultSpareTpl' => '',
+ * ];<pre>
+ * 
  * @package     wf.template
  * @author      cm <cmpan@qq.com>
  * @link        http://docs.windwork.org/manual/wf.template.html
@@ -35,38 +65,6 @@ interface EngineInterface
      * @return mixed
      */
     public function __get($var);
-
-    /**
-     *
-     * @param array $cfg = [<pre>
-     *     // 模板目录，相对于入口文件所在目录
-     *     'tplDir'         => 'template/default',
-     *
-     *     // 渲染模板时，是否检查模板文件是否需要编译
-     *     'compileCheck'   => true,
-     *
-     *     // 设置模板识别id,用于区分不同国家的语言
-     *     'compileId'      => '',
-     *
-     *     // 编译后的模板文件保存的文件夹
-     *     'compileDir'    => 'data/template',
-     *
-     *     // 设置模板是否强制每次都编译
-     *     'compileForce'   => false,
-     *
-     *     // 编译后的模板文件是否合并成一个文件
-     *     // 如果启用，能稍微提高性能，但页面子模板修改时程序将不能检测到，修改子模板后需要通过后台清楚模板缓存
-     *     // 建议工业环境启用、开发环境停用
-     *     'compileMerge'   => true,
-     *
-     *     // 默认模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
-     *     'defaultTpl' => '',
-     *
-     *     // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}/{$act}.html"
-     *     'defaultSpareTpl' => '',
-     * <pre>];
-     */
-    public function __construct(array $cfg = []);
 
     /**
      * 模板变量赋值
