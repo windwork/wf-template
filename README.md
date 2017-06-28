@@ -421,8 +421,9 @@ $view->render('topic/2017/newyear.html');
 请implements \wf\template\EngineInterface 接口实现自定义模板。
 
 
-<br />
-<br />
-> ### 要了解更多？
-> - [官方完整文档首页](http://docs.windwork.org/manual/)
-> - [官方源码首页](https://github.com/windwork
+<br />  
+<br />  
+
+### 要了解更多？  
+> - [官方完整文档首页](http://docs.windwork.org/manual/)  
+> - [官方源码首页](https://github.com/windwork)  
