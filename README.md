@@ -10,7 +10,8 @@ Windwork通过模板引擎将视图从业务逻辑分离，便于前端与程序
 <!DOCTYPE html>
 <html>
     <head>
-        <title>My Page</title>
+        <meta charset="UTF-8" />
+        <title>wf-template usage</title>
     </head>
     <body>
         <ul id="nav">
@@ -418,3 +419,10 @@ $view->render('topic/2017/newyear.html');
 # 7、自定义模板引擎
 如果你有兴趣，也可以自定义模板引擎，在Windwork中使用。
 请implements \wf\template\EngineInterface 接口实现自定义模板。
+
+
+<br />
+<br />
+> ### 要了解更多？
+> - [官方完整文档首页](http://docs.windwork.org/manual/)
+> - [官方源码首页](https://github.com/windwork
