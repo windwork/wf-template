@@ -353,7 +353,7 @@ class Wind implements \wf\template\EngineInterface
                                                                 . " * From: {$tplFile}\n"
                                                                 . " * Time: ". date('Y-m-d H:i:s') . "\n"
                                                                     . " */\n"
-                                                                        . "defined('IS_IN') || die('Access Denied');\n"
+                                                                        . "defined('WF_IN') || die('Access Denied');\n"
                                                                             . "?>";
                                                                             
                                                                             // 保存“编译”后模板文件

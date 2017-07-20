@@ -1,7 +1,7 @@
 <?php
 
 
-define('IS_IN', 1);
+define('WF_IN', 1);
 
 require_once __DIR__ . '/../lib/EngineInterface.php';
 require_once __DIR__ . '/../lib/strategy/Wind.php';

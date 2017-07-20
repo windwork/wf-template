@@ -92,7 +92,7 @@ $this->view()->render();
 ## 2.3 在控制器中使用模板
 如下为在Windwork MVC的控制器中使用模板引擎
 ```
-class AccountController extends \wf\web\Controller {
+class AccountController extends \wf\app\web\Controller {
     public function loginAction() {
         // 模板变量赋值
         $this->view()->assign('time', time());
