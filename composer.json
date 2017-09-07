@@ -1,7 +1,7 @@
 {
 	"name" : "windwork/template",
 	"description" : "windwork template engine",
-	"version" : "0.6.2",
+	"version" : "0.7.0",
 	"time" : "2017-07-20 08:50:00",
 	"require" : {
 		"php" : ">=5.5.0"

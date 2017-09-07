@@ -379,7 +379,7 @@ $tplOpt = [
     // 默认备用模板文件，为空或跟默认模板文件一样，则不使用备用模板文件，建议是"{$mod}/{$ctl}.{$act}.html"
     'defaultSpareTpl' => '',
 ];
-$view = new \wf\template\strategy\Wind($tplOpt);
+$view = new \wf\template\adapter\Wind($tplOpt);
 
 // 变量赋值
 $view->assign('myVar', '123456');

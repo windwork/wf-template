@@ -7,13 +7,13 @@
  * @copyright Copyright (c) 2008-2017 Windwork Team. (http://www.windwork.org)
  * @license   http://opensource.org/licenses/MIT
  */
-namespace wf\template\strategy;
+namespace wf\template\adapter;
 
 /**
  * 模板视图引擎
  * 模板引擎将模板“编译”成php脚本，每次调用视图的时候将包含 “编译”后的php脚本
  *
- * @package     wf.template.strategy
+ * @package     wf.template.adapter
  * @author      cm <cmpan@qq.com>
  * @link        http://docs.windwork.org/manual/wf.template.html
  * @since       1.0.0
